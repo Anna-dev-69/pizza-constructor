@@ -1,4 +1,5 @@
-import AddedToCart from "../components/main/added-to-cart/AddedToCart";
+import Header from "../components/header/Header";
+import BasketAdd from "../components/main/basket-add/BasketAdd";
 import { useStore } from "../store/store";
 import { Box, Button, Container, Flex } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
@@ -8,8 +9,9 @@ const Basket = () => {
 
   return (
     <Container maxW="1200px" mx="auto" p={4}>
+      <Header />
       <Flex w="1200px" flexDirection="row">
-        <AddedToCart basket={basket} />
+        <BasketAdd basket={basket} />
       </Flex>
       <Box display="flex" gap={2}>
         <Button
@@ -27,6 +29,7 @@ const Basket = () => {
           p={2}
           bg="rgb(248, 150, 76)"
           _hover={{ bg: "rgb(230,130,50)" }}
+          disabled={basket.length === 0}
         >
           <Link to="/order">Оформить заказ</Link>
         </Button>

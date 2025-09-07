@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Card,
   Heading,
   HStack,
@@ -9,25 +8,15 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import pizzaImg from "../../../assets/pizza.svg";
-import { IIngredients } from "../../../store/interfaces";
+import { IIngredients, IPizza } from "../../../store/interfaces";
+import IngredientsList from "./IngredientsList";
 
 interface FullCardProps {
-  imgSrc: string;
-  title: string;
-  price: number;
   ingredients: IIngredients[];
-  totalAmount: number;
-  id: number;
+  pizza: IPizza;
 }
 
-const FullCard: React.FC<FullCardProps> = ({
-  imgSrc,
-  title,
-  price,
-  ingredients,
-  totalAmount,
-  id,
-}) => {
+const FullCard: React.FC<FullCardProps> = ({ pizza, ingredients }) => {
   return (
     <Card.Root
       maxW="sm"
@@ -40,7 +29,7 @@ const FullCard: React.FC<FullCardProps> = ({
         boxShadow: "lg",
       }}
     >
-      <Box border="1px solid rgb(82, 167, 114)" borderRadius="lg">
+      <Box border="1px solid rgb(82, 167, 114)" borderRadius="lg" p={1}>
         <Box
           position="relative"
           bg="rgb(244, 254, 250)"
@@ -50,13 +39,18 @@ const FullCard: React.FC<FullCardProps> = ({
           justifyContent="center"
           alignItems="center"
         >
-          <Image src={pizzaImg} alt={title} maxW="100%" objectFit="cover" />
+          <Image
+            src={pizzaImg}
+            alt={pizza.name}
+            maxW="100%"
+            objectFit="cover"
+          />
         </Box>
 
         <Card.Body p={4}>
           <VStack spaceX={2} align="stretch">
             <Heading size="md" textAlign="center">
-              {title}
+              {pizza.name}
             </Heading>
 
             <Text
@@ -65,49 +59,15 @@ const FullCard: React.FC<FullCardProps> = ({
               color="orange.600"
               textAlign="center"
             >
-              {price} руб
+              {pizza.price} руб
             </Text>
           </VStack>
         </Card.Body>
       </Box>
 
-      {ingredients && ingredients.length > 0 && (
-        <Box
-          px={4}
-          pb={4}
-          pt={2}
-          borderTop="1px solid"
-          borderTopColor="gray.100"
-        >
-          <Text
-            fontSize="sm"
-            fontWeight="medium"
-            color="gray.700"
-            mb={2}
-            textAlign="center"
-          >
-            Дополнительные ингредиенты:
-          </Text>
-
-          <VStack align="stretch">
-            {ingredients.map((item) => (
-              <HStack
-                key={item.id}
-                justify="space-between"
-                spaceX={2}
-                fontSize="sm"
-              >
-                <Text color="gray.600">{item.name}</Text>
-                <Text color="orange.600" fontWeight="medium">
-                  +{item.price} р
-                </Text>
-              </HStack>
-            ))}
-          </VStack>
-        </Box>
-      )}
+      {!!ingredients.length && <IngredientsList ingredients={ingredients} />}
       <Box p={2} fontWeight="medium" textAlign="center">
-        <p>Общая сумма: {totalAmount}руб </p>
+        <p>Общая сумма: {pizza.totalAmount}руб </p>
       </Box>
 
       <Card.Footer pt={4} m={2} borderTop="1px solid" borderTopColor="gray.100">

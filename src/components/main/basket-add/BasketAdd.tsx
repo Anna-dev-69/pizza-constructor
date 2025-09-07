@@ -14,11 +14,11 @@ import pizzaImg from "../../../assets/pizza.svg";
 import deleteIcon from "../../../assets/delete.svg";
 import { IPizza } from "../../../store/interfaces";
 
-interface AddedToCartProps {
+interface BasketAddProps {
   basket: IPizza[];
 }
 
-const AddedToCart: React.FC<AddedToCartProps> = ({ basket }) => {
+const BasketAdd: React.FC<BasketAddProps> = ({ basket }) => {
   if (basket.length === 0) {
     return (
       <Box textAlign="center" py={10}>
@@ -62,7 +62,7 @@ const AddedToCart: React.FC<AddedToCartProps> = ({ basket }) => {
             position="absolute"
             right={2}
             top={1}
-            zIndex={9999}
+            zIndex={2}
           >
             <Image src={deleteIcon} />
           </Button>
@@ -160,4 +160,4 @@ const AddedToCart: React.FC<AddedToCartProps> = ({ basket }) => {
   );
 };
 
-export default AddedToCart;
+export default BasketAdd;

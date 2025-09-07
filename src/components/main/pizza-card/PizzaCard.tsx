@@ -8,35 +8,26 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import pizza from "../../../assets/pizza.svg";
+import pizzaImg from "../../../assets/pizza.svg";
 import { useStore } from "../../../store/store";
-import { IIngredients } from "../../../store/interfaces";
+import { IPizza } from "../../../store/interfaces";
 
 interface PizzaCardProps {
-  // imgSrc: string;
-  title: string;
-  price: number;
-  ingredients: IIngredients[];
   onOpenModal: (val: boolean) => void;
-  pizzaId: number;
+  pizza: IPizza;
 }
 
-const PizzaCard: React.FC<PizzaCardProps> = ({
-  title,
-  price,
-  onOpenModal,
-  pizzaId,
-}) => {
+const PizzaCard: React.FC<PizzaCardProps> = ({ pizza, onOpenModal }) => {
   return (
     <Card.Root
       maxW="sm"
       boxShadow="md"
       borderRadius="lg"
       overflow="hidden"
+      transition="all 0.3s ease"
       _hover={{
         transform: "translateY(-4px)",
         boxShadow: "2xl",
-        transition: "0.3s",
       }}
     >
       <Box
@@ -47,7 +38,7 @@ const PizzaCard: React.FC<PizzaCardProps> = ({
         h="120px"
         w="100%"
       >
-        <Image src={pizza} alt={title} maxW="100%" />
+        <Image src={pizzaImg} alt={pizza.name} maxW="100%" />
       </Box>
 
       <Card.Body
@@ -58,8 +49,8 @@ const PizzaCard: React.FC<PizzaCardProps> = ({
         textAlign="center"
       >
         <Stack gap={0}>
-          <Heading size="lg">{title}</Heading>
-          <Text fontSize="sm">{price} руб</Text>
+          <Heading size="lg">{pizza.name}</Heading>
+          <Text fontSize="sm">{pizza.price} руб</Text>
         </Stack>
       </Card.Body>
 
@@ -71,12 +62,15 @@ const PizzaCard: React.FC<PizzaCardProps> = ({
       >
         <Button
           variant="solid"
-          p={2}
           bg="rgb(248, 150, 76)"
           _hover={{ bg: "rgb(230,130,50)" }}
+          p={{ base: 2, sm: 2 }}
+          fontSize={{ base: "sm", md: "md" }}
+          w={{ base: "80%", sm: "auto" }}
+          maxW="300px"
           onClick={() => {
             onOpenModal(true);
-            useStore.getState().addToCart(pizzaId);
+            useStore.getState().addToCart(pizza.id);
           }}
         >
           Добавить в корзину

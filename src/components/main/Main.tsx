@@ -1,5 +1,5 @@
 import { Box, Container, Flex } from "@chakra-ui/react";
-import ListOfPizzas from "./list-of-pizzas/ListOfPizzas";
+import PizzaList from "./pizza-list/PizzaList";
 import { useState } from "react";
 import { useStore } from "../../store/store";
 import OrderSidebar from "./order-sidebar/OrderSidebar";
@@ -13,10 +13,7 @@ const Main = () => {
     <Container maxW="container.xl">
       <Flex gap={6}>
         <Box flex={3}>
-          <ListOfPizzas
-            isOpenModal={isOpenModal}
-            onOpenModal={setIsOpenModal}
-          />
+          <PizzaList isOpenModal={isOpenModal} onOpenModal={setIsOpenModal} />
         </Box>
         <Box flex={1}>
           <OrderSidebar />

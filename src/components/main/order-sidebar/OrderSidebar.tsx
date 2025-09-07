@@ -12,7 +12,7 @@ const OrderSidebar = () => {
     if (!selectedPizza || selectedPizza.id === undefined) return;
 
     let priceSelectedIngredients = selectedIngredients.reduce(
-      (acc, item) => acc + (item.price || 0),
+      (acc, item) => acc + item.price,
       0
     );
 
@@ -35,14 +35,7 @@ const OrderSidebar = () => {
   return (
     <Container p={4} mt={4}>
       {selectedPizza && (
-        <FullCard
-          imgSrc={selectedPizza?.image}
-          price={selectedPizza?.price}
-          title={selectedPizza?.name}
-          ingredients={selectedIngredients}
-          totalAmount={selectedPizza.totalAmount}
-          id={selectedPizza.id}
-        />
+        <FullCard pizza={selectedPizza} ingredients={selectedIngredients} />
       )}
     </Container>
   );

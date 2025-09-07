@@ -1,8 +1,8 @@
 import { create } from "zustand";
-import { pizzasData } from "./constants";
 import { saveToStorage } from "../utils/save-to-storage";
 import { loadFromStorage } from "../utils/load-from-storage";
 import { StoreState } from "./interfaces";
+import { pizzasData } from "./mock-data";
 
 export const useStore = create<StoreState>((set, get) => ({
   pizzas: pizzasData,
@@ -53,7 +53,7 @@ export const useStore = create<StoreState>((set, get) => ({
 
       return {
         selectedPizza: findPizza,
-        selectedIngredients: [],
+        selectedIngredients: findPizza?.selectedIngredients || [],
       };
     }),
 

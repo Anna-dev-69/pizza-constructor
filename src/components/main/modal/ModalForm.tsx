@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Checkbox, Dialog, Portal, Stack } from "@chakra-ui/react";
 import { useStore } from "../../../store/store";
 import { IIngredients } from "../../../store/interfaces";
@@ -17,6 +17,7 @@ function ModalWithCheckboxes({
   pizzaId,
 }: ModalWithCheckboxesProps) {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const selectedPizza = useStore((s) => s.selectedPizza);
 
   const handleCheckboxChange = (value: string, checked: boolean | string) => {
     const isChecked = checked === true || checked === "true";
@@ -26,7 +27,15 @@ function ModalWithCheckboxes({
     );
 
     if (ingredient) {
-      useStore.getState().addIngredient(ingredient);
+      if (isChecked) {
+        useStore.getState().addIngredient(ingredient);
+      } else {
+        useStore.setState((state) => ({
+          selectedIngredients: state.selectedIngredients.filter(
+            (ing) => ing.id !== ingredient.id
+          ),
+        }));
+      }
     }
 
     setSelectedItems((prev) =>
@@ -35,6 +44,8 @@ function ModalWithCheckboxes({
   };
 
   const handleAddIngredients = () => {
+    if (!selectedPizza) return;
+
     const selectedIngredients = ingredients.filter((ingredient) =>
       selectedItems.includes(ingredient.id)
     );

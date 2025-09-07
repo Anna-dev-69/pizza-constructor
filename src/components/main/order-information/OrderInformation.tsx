@@ -12,6 +12,7 @@ import {
 import { FormValues } from "../user-data-from/UserDataFrom";
 import { IPizza } from "../../../store/interfaces";
 import CartContents from "./CartContents";
+import InfoItem from "./InfoItem";
 
 interface OrderInformationProp {
   basket: IPizza[];
@@ -41,35 +42,10 @@ const OrderInformation = ({
           </CardHeader>
           <CardBody p={4}>
             <SimpleGrid columns={{ base: 1, md: 2 }}>
-              <Box>
-                <Text fontWeight="bold" color="gray.600" mb={1}>
-                  Имя:
-                </Text>
-                <Text fontSize="lg">{formData.firstName}</Text>
-              </Box>
-
-              <Box>
-                <Text fontWeight="bold" color="gray.600" mb={1}>
-                  Телефон:
-                </Text>
-                <Text fontSize="lg">{formData.phone}</Text>
-              </Box>
-
-              <Box>
-                <Text fontWeight="bold" color="gray.600" mb={1}>
-                  Адрес доставки:
-                </Text>
-                <Text fontSize="lg">{formData.address}</Text>
-              </Box>
-
-              {formData.comment && (
-                <Box>
-                  <Text fontWeight="bold" color="gray.600" mb={1}>
-                    Комментарий:
-                  </Text>
-                  <Text fontSize="lg">{formData.comment}</Text>
-                </Box>
-              )}
+              <InfoItem title="Имя" value={formData.firstName} />
+              <InfoItem title="Телефон" value={formData.phone} />
+              <InfoItem title="Адрес доставки" value={formData.address} />
+              <InfoItem title="Комментарий" value={formData.comment} />
             </SimpleGrid>
           </CardBody>
         </CardRoot>
