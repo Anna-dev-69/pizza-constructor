@@ -10,32 +10,23 @@ import {
 
 import pizza from "../../../assets/pizza.svg";
 import { useStore } from "../../../store/store";
-
-export interface IIngredients {
-  id: string;
-  name: string;
-  price: number;
-}
+import { IIngredients } from "../../../store/interfaces";
 
 interface PizzaCardProps {
-  imgSrc: string;
+  // imgSrc: string;
   title: string;
   price: number;
   ingredients: IIngredients[];
-  pizzaId: number;
-  isOpenModal: boolean;
   onOpenModal: (val: boolean) => void;
+  pizzaId: number;
 }
 
 const PizzaCard: React.FC<PizzaCardProps> = ({
-  imgSrc,
   title,
   price,
-  pizzaId,
   onOpenModal,
+  pizzaId,
 }) => {
-  const addToCart = useStore((s) => s.addToCart);
-
   return (
     <Card.Root
       maxW="sm"
@@ -72,35 +63,21 @@ const PizzaCard: React.FC<PizzaCardProps> = ({
         </Stack>
       </Card.Body>
 
-      <Card.Footer p={4} display="flex" alignItems="center" textAlign="center">
-        <Button
-          onClick={() => onOpenModal(true)}
-          size="sm"
-          variant="outline"
-          colorScheme="orange"
-          css={{
-            borderRadius: "md",
-            fontSize: "xs",
-            fontWeight: "medium",
-            border: "1px solid",
-            borderColor: "orange.300",
-            backgroundColor: "orange.50",
-            _hover: {
-              backgroundColor: "orange.100",
-              borderColor: "orange.400",
-            },
-          }}
-        >
-          Доп
-        </Button>
-
+      <Card.Footer
+        p={3}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
         <Button
           variant="solid"
           p={2}
           bg="rgb(248, 150, 76)"
-          //   color={color}
           _hover={{ bg: "rgb(230,130,50)" }}
-          onClick={() => addToCart(pizzaId)}
+          onClick={() => {
+            onOpenModal(true);
+            useStore.getState().addToCart(pizzaId);
+          }}
         >
           Добавить в корзину
         </Button>

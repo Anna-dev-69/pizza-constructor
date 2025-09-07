@@ -1,70 +1,14 @@
-import { IIngredients } from "../components/main/pizza-card/PizzaCard";
 import { create } from "zustand";
-import { pizzasData, STORAGE_KEY } from "./constants";
-
-export interface IPizza {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  ingredients: IIngredients[];
-  selectedIngredients: IIngredients[];
-  totalAmount: number;
-}
-
-interface StoreState {
-  pizzas: IPizza[];
-  currentPizzaId: number;
-  selectedPizza: IPizza | null;
-  selectedIngredients: IIngredients[];
-  setSelectedPizza: (id: number) => void;
-  setSelectedIngredients: (ingredients: IIngredients[]) => void;
-  addIngredient: (ingredient: IIngredients) => void;
-  currentPizzaForDialog: IPizza | null;
-  setCurrentPizzaForDialog: (id: number) => void;
-  basket: IPizza[];
-  addToCart: (id: number) => void;
-  totalAmount: number;
-  total: number;
-  updatePizzaSelectedIngredients: (
-    pizzaId: number,
-    ingredients: IIngredients[]
-  ) => void;
-  initializeFromStorage: () => void;
-  removeFromCart: (id: number) => void;
-}
-
-const saveToStorage = (state: Partial<StoreState>) => {
-  try {
-    const dataToSave = {
-      basket: state.basket,
-      total: state.total,
-      pizzas: state.pizzas,
-    };
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
-  } catch (e) {
-    console.error("Ошибка при сохранении в localStorage:", e);
-  }
-};
-
-const loadFromStorage = () => {
-  try {
-    const data = localStorage.getItem(STORAGE_KEY);
-    return data ? JSON.parse(data) : null;
-  } catch (e) {
-    console.error("Ошибка при загрузке из localStorage:", e);
-
-    return null;
-  }
-};
+import { pizzasData } from "./constants";
+import { saveToStorage } from "../utils/save-to-storage";
+import { loadFromStorage } from "../utils/load-from-storage";
+import { StoreState } from "./interfaces";
 
 export const useStore = create<StoreState>((set, get) => ({
   pizzas: pizzasData,
   currentPizzaId: 0,
   selectedPizza: null,
   selectedIngredients: [],
-  currentPizzaForDialog: null,
   basket: [],
   totalAmount: 0,
   total: 0,
@@ -72,7 +16,10 @@ export const useStore = create<StoreState>((set, get) => ({
   initializeFromStorage: () => {
     const saveData = loadFromStorage();
     if (saveData) {
-      set(saveData);
+      set((state) => ({
+        ...state,
+        ...saveData,
+      }));
     }
   },
 
@@ -84,13 +31,6 @@ export const useStore = create<StoreState>((set, get) => ({
             ? { ...pizza, selectedIngredients: ingredients }
             : pizza
         ),
-        // currentPizzaForDialog:
-        //   state.currentPizzaForDialog?.id === pizzaId
-        //     ? {
-        //         ...state.currentPizzaForDialog,
-        //         selectedIngredients: ingredients,
-        //       }
-        //     : state.currentPizzaForDialog,
       };
 
       saveToStorage({ ...state, ...newState });
@@ -142,15 +82,9 @@ export const useStore = create<StoreState>((set, get) => ({
         total: sum,
       };
 
-      // Сохраняем в localStorage
       saveToStorage({ ...state, ...newState });
 
       return newState;
-
-      // return {
-      //   basket: newBasket,
-      //   total: sum,
-      // };
     }),
 
   removeFromCart: (id) =>
@@ -165,16 +99,6 @@ export const useStore = create<StoreState>((set, get) => ({
       saveToStorage({ ...state, ...newState });
 
       return newState;
-    }),
-
-  setCurrentPizzaForDialog: (id) =>
-    set((state) => {
-      const findPizza = state.pizzas.find((pizza) => pizza.id === id) || null;
-
-      return {
-        ...state,
-        currentPizzaForDialog: findPizza,
-      };
     }),
 
   addIngredient: (ingredient) =>

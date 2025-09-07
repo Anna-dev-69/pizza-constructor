@@ -1,7 +1,8 @@
 import { Container } from "@chakra-ui/react";
 import FullCard from "../full-card/FullCard";
-import { IPizza, useStore } from "../../../store/store";
+import { useStore } from "../../../store/store";
 import { useEffect } from "react";
+import { IPizza } from "../../../store/interfaces";
 
 const OrderSidebar = () => {
   const selectedPizza = useStore((s) => s.selectedPizza);

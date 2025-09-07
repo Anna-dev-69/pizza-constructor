@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UserDataFrom from "../components/main/user-data-from/UserDataFrom";
 import {
   Button,
@@ -14,10 +14,13 @@ import {
 } from "@chakra-ui/react";
 import OrderInformation from "../components/main/order-information/OrderInformation";
 import { useStore } from "./../store/store";
-import { Link } from "react-router-dom";
+import { toaster } from "../components/ui/toaster";
 
 const OrderProcess = () => {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(() => {
+    const savedStep = sessionStorage.getItem("currentStep");
+    return savedStep ? Number(savedStep) : 0;
+  });
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -28,20 +31,22 @@ const OrderProcess = () => {
   const basket = useStore((s) => s.basket);
   const total = useStore((s) => s.total);
 
-  const steps = [
-    {
-      title: "Корзина",
-      description: "",
-    },
-    {
-      title: "Данные",
-      description: "",
-    },
-    {
-      title: "Подтверждение",
-      description: "",
-    },
-  ];
+  useEffect(() => {
+    sessionStorage.setItem("currentStep", String(currentStep));
+  }, [currentStep]);
+
+  useEffect(() => {
+    if (isOrderPlaced) {
+      queueMicrotask(() => {
+        toaster.create({
+          title: "Заказ оформлен!",
+          type: "success",
+        });
+      });
+    }
+  }, [isOrderPlaced]);
+
+  const steps = ["Корзина", "Данные", "Подтверждение"];
 
   return (
     <Box p={4}>
@@ -58,7 +63,7 @@ const OrderProcess = () => {
             <Steps.Item
               key={index}
               index={index}
-              title={step.title}
+              title={step}
               colorPalette="green"
             >
               <Steps.Indicator />
@@ -71,9 +76,7 @@ const OrderProcess = () => {
           {steps.map((step, index) => (
             <Steps.Content key={index} index={index}>
               <Box p={4} border="1px" borderColor="gray.200" borderRadius="md">
-                {step.description}
-
-                {step.title === "Корзина" && index === 0 && (
+                {index === 0 && (
                   <Box
                     display="flex"
                     alignItems="center"
@@ -99,7 +102,20 @@ const OrderProcess = () => {
                           _hover={{ bg: "gray.50" }}
                           borderRadius="md"
                         >
-                          <Text fontWeight="medium">{item.name}</Text>
+                          <Box>
+                            <Text fontWeight="medium">{item.name}</Text>
+
+                            <Text color="green">Доп. ингредиенты:</Text>
+                            <Box>
+                              {item.selectedIngredients.map((ingredient) => (
+                                <HStack key={ingredient.id}>
+                                  <Text fontSize="xs">
+                                    {ingredient.name}-{ingredient.price}руб
+                                  </Text>
+                                </HStack>
+                              ))}
+                            </Box>
+                          </Box>
                           <Badge colorScheme="green" variant="subtle">
                             {item.totalAmount} руб
                           </Badge>
@@ -158,26 +174,6 @@ const OrderProcess = () => {
             </Steps.Content>
           ))}
 
-          {isOrderPlaced && (
-            <Steps.CompletedContent>
-              <Box p={4} bg="green.100" borderRadius="md">
-                Заказ оформлен!
-              </Box>
-
-              <Button
-                color="blue.500"
-                fontSize="sm"
-                fontWeight="medium"
-                _hover={{
-                  color: "blue.600",
-                  textDecoration: "none",
-                }}
-                bg="transparent"
-              >
-                <Link to="/">Вернуться на главную страницу</Link>
-              </Button>
-            </Steps.CompletedContent>
-          )}
           {currentStep === 0 && (
             <ButtonGroup size="md" variant="outline">
               <Steps.PrevTrigger asChild>

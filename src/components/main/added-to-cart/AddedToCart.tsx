@@ -1,4 +1,4 @@
-import { IPizza, useStore } from "../../../store/store";
+import { useStore } from "../../../store/store";
 import {
   Box,
   Button,
@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import pizzaImg from "../../../assets/pizza.svg";
 import deleteIcon from "../../../assets/delete.svg";
+import { IPizza } from "../../../store/interfaces";
 
 interface AddedToCartProps {
   basket: IPizza[];

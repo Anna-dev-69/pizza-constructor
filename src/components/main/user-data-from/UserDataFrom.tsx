@@ -50,9 +50,21 @@ const UserDataFrom = ({
             {...register("phone", {
               required: "Телефон обязателен",
               pattern: {
-                value:
-                  /^[\+]?[7,8][\s\(]?\d{3}[\s\)]?\d{3}[\s\-]?\d{2}[\s\-]?\d{2}$/,
+                value: /^\+7\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/,
                 message: "Введите корректный номер телефона",
+              },
+              onChange: (e) => {
+                let val = e.target.value.replace(/\D/g, "");
+                if (val.startsWith("8")) val = "7" + val.slice(1);
+                if (!val.startsWith("7")) val = "7" + val;
+
+                let formatted = "+7 ";
+                if (val.length > 1) formatted += "(" + val.slice(1, 4);
+                if (val.length >= 4) formatted += ") " + val.slice(4, 7);
+                if (val.length >= 7) formatted += "-" + val.slice(7, 9);
+                if (val.length >= 9) formatted += "-" + val.slice(9, 11);
+
+                e.target.value = formatted;
               },
             })}
             placeholder="+7 (XXX) XXX-XX-XX"

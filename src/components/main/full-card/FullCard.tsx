@@ -8,9 +8,8 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { IIngredients } from "../pizza-card/PizzaCard";
-import { useStore } from "../../../store/store";
 import pizzaImg from "../../../assets/pizza.svg";
+import { IIngredients } from "../../../store/interfaces";
 
 interface FullCardProps {
   imgSrc: string;
@@ -112,22 +111,7 @@ const FullCard: React.FC<FullCardProps> = ({
       </Box>
 
       <Card.Footer pt={4} m={2} borderTop="1px solid" borderTopColor="gray.100">
-        <HStack spaceX={3} w="full">
-          <Button
-            size="sm"
-            bg="rgb(248, 150, 76)"
-            _hover={{ bg: "rgb(230,130,50)" }}
-            colorScheme="orange"
-            flex={2}
-            onClick={() => useStore.getState().addToCart(id)}
-            css={{
-              borderRadius: "md",
-              fontWeight: "medium",
-            }}
-          >
-            В корзину
-          </Button>
-        </HStack>
+        <HStack spaceX={3} w="full"></HStack>
       </Card.Footer>
     </Card.Root>
   );

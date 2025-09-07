@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Checkbox, Dialog, Portal, Stack } from "@chakra-ui/react";
-import { IIngredients } from "../pizza-card/PizzaCard";
 import { useStore } from "../../../store/store";
+import { IIngredients } from "../../../store/interfaces";
 
 interface ModalWithCheckboxesProps {
   isOpenModal: boolean;
@@ -39,12 +39,12 @@ function ModalWithCheckboxes({
       selectedItems.includes(ingredient.id)
     );
 
-    console.log("Выбрано:", selectedIngredients);
-
     useStore
       .getState()
       .updatePizzaSelectedIngredients(pizzaId, selectedIngredients);
     onOpenModal(false);
+
+    useStore.getState().addToCart(pizzaId);
   };
 
   return (
@@ -53,25 +53,12 @@ function ModalWithCheckboxes({
         <Portal>
           <Dialog.Backdrop />
           <Dialog.Positioner
-            css={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              minHeight: "100vh",
-              padding: "20px",
-            }}
+            direction="row"
+            minH="100vh"
+            p="20px"
+            alignItems="center"
           >
-            <Dialog.Content
-              css={{
-                width: "400px",
-                maxWidth: "90vw",
-                padding: "20px",
-                "@media (max-width: 768px)": {
-                  width: "90vw",
-                  padding: "15px",
-                },
-              }}
-            >
+            <Dialog.Content w="400px" p="20px">
               <Dialog.Header>
                 <Dialog.Title mb={4}>
                   Выберите дополнительные ингредиенты
