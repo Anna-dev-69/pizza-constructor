@@ -11,6 +11,7 @@ import {
 import pizzaImg from "../../../assets/pizza.svg";
 import { useStore } from "../../../store/store";
 import { IPizza } from "../../../store/interfaces";
+import colors from "../../../shared/colors";
 
 interface PizzaCardProps {
   onOpenModal: (val: boolean) => void;
@@ -62,8 +63,8 @@ const PizzaCard: React.FC<PizzaCardProps> = ({ pizza, onOpenModal }) => {
       >
         <Button
           variant="solid"
-          bg="rgb(248, 150, 76)"
-          _hover={{ bg: "rgb(230,130,50)" }}
+          bg={colors.orange[100]}
+          _hover={{ bg: colors.orange[200] }}
           p={{ base: 2, sm: 2 }}
           fontSize={{ base: "sm", md: "md" }}
           w={{ base: "80%", sm: "auto" }}

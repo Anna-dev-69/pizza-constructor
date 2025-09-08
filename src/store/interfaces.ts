@@ -32,4 +32,5 @@ export interface StoreState {
   ) => void;
   initializeFromStorage: () => void;
   removeFromCart: (id: number) => void;
+  isCartEmpty: boolean;
 }

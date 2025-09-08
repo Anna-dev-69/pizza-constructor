@@ -1,5 +1,6 @@
+import colors from "../../../shared/colors";
 import { Button, Field, Input, Stack, Textarea } from "@chakra-ui/react";
-import { useForm, UseFormSetValue } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 export interface FormValues {
   firstName: string;
@@ -103,9 +104,9 @@ const UserDataFrom = ({
         <Button
           type="submit"
           p={2}
-          bg="rgb(82, 167, 114)"
+          bg={colors.green[50]}
           transition="background-color 300ms"
-          _hover={{ bg: "rgba(82, 167, 115, 0.75)" }}
+          _hover={{ bg: colors.green[100] }}
         >
           Отправить
         </Button>

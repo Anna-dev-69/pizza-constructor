@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Button, ButtonGroup, Stack, Steps, Box } from "@chakra-ui/react";
 import { useStore } from "./../store/store";
 import StepsContent from "../components/main/steps-content/StepsContent";
-import Header from "../components/header/Header";
 
 const OrderProcess = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -36,7 +35,6 @@ const OrderProcess = () => {
 
   return (
     <>
-      <Header />
       <Box p={4}>
         <Steps.Root
           maxW="1200px"

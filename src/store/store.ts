@@ -12,6 +12,7 @@ export const useStore = create<StoreState>((set, get) => ({
   basket: [],
   totalAmount: 0,
   total: 0,
+  isCartEmpty: false,
 
   initializeFromStorage: () => {
     const saveData = loadFromStorage();

@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Button, Checkbox, Dialog, Portal, Stack } from "@chakra-ui/react";
 import { useStore } from "../../../store/store";
 import { IIngredients } from "../../../store/interfaces";
+import OrderSidebar from "../order-sidebar/OrderSidebar";
+import colors from "../../../shared/colors";
 
 interface ModalWithCheckboxesProps {
   isOpenModal: boolean;
@@ -17,7 +19,34 @@ function ModalWithCheckboxes({
   pizzaId,
 }: ModalWithCheckboxesProps) {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
   const selectedPizza = useStore((s) => s.selectedPizza);
+  const isCartEmpty = useStore((s) => s.isCartEmpty);
+
+  useEffect(() => {
+    if (isCartEmpty) {
+      setSelectedItems([]);
+      sessionStorage.removeItem(`selectedItems-${pizzaId}`);
+    }
+  }, [isCartEmpty, pizzaId]);
+
+  useEffect(() => {
+    if (isOpenModal && selectedPizza) {
+      setSelectedItems(selectedPizza?.selectedIngredients.map((ing) => ing.id));
+    }
+  }, [isOpenModal, selectedPizza?.selectedIngredients]);
+
+  useEffect(() => {
+    const saved = sessionStorage.getItem(`selectedItems-${pizzaId}`);
+    setSelectedItems(saved ? JSON.parse(saved) : []);
+  }, [pizzaId]);
+
+  useEffect(() => {
+    sessionStorage.setItem(
+      `selectedItems-${pizzaId}`,
+      JSON.stringify(selectedItems)
+    );
+  }, [selectedItems, pizzaId]);
 
   const handleCheckboxChange = (value: string, checked: boolean | string) => {
     const isChecked = checked === true || checked === "true";
@@ -53,9 +82,18 @@ function ModalWithCheckboxes({
     useStore
       .getState()
       .updatePizzaSelectedIngredients(pizzaId, selectedIngredients);
+
     onOpenModal(false);
 
     useStore.getState().addToCart(pizzaId);
+  };
+
+  const handleCancel = () => {
+    if (!selectedPizza) return;
+
+    setSelectedItems(selectedPizza?.selectedIngredients.map((ing) => ing.id));
+
+    onOpenModal(false);
   };
 
   return (
@@ -70,6 +108,7 @@ function ModalWithCheckboxes({
             alignItems="center"
           >
             <Dialog.Content w="400px" p="20px">
+              <OrderSidebar />
               <Dialog.Header>
                 <Dialog.Title mb={4}>
                   Выберите дополнительные ингредиенты
@@ -100,20 +139,16 @@ function ModalWithCheckboxes({
               </Dialog.Body>
 
               <Dialog.Footer gap="3">
-                <Button
-                  p={2}
-                  variant="outline"
-                  onClick={() => onOpenModal(false)}
-                >
+                <Button p={2} variant="outline" onClick={handleCancel}>
                   Отмена
                 </Button>
                 <Button
                   p={2}
                   onClick={handleAddIngredients}
                   disabled={selectedItems.length === 0}
-                  bg="rgb(82, 167, 114)"
+                  bg={colors.green[50]}
                   transition="background-color 300ms"
-                  _hover={{ bg: "rgba(82, 167, 115, 0.75)" }}
+                  _hover={{ bg: colors.green[100] }}
                 >
                   Добавить
                 </Button>

@@ -13,6 +13,8 @@ import OrderInformation from "../order-information/OrderInformation";
 import { IPizza } from "@/store/interfaces";
 import { toaster } from "../../ui/toaster";
 import { useStore } from "../../../store/store";
+import { STORAGE_KEY } from "../../../store/constants";
+import colors from "../../../shared/colors";
 
 interface StepsContentProps {
   index: number;
@@ -23,6 +25,13 @@ interface StepsContentProps {
   total: number;
 }
 
+enum CheckoutStep {
+  Cart = 0,
+  Contact = 1,
+  Summary = 2,
+  Complete = 3,
+}
+
 const StepsContent = ({
   index,
   basket,
@@ -31,10 +40,12 @@ const StepsContent = ({
   onCurrentStep,
   total,
 }: StepsContentProps) => {
+  console.log("basket", basket);
+
   return (
     <Steps.Content key={index} index={index}>
       <Box p={4} border="1px" borderColor="gray.200" borderRadius="md">
-        {index === 0 && (
+        {index === CheckoutStep.Cart && (
           <Box display="flex" alignItems="center" flexDirection="column">
             <Heading size="md" mb={4} color="gray.700">
               Содержимое корзины
@@ -88,7 +99,7 @@ const StepsContent = ({
           </Box>
         )}
 
-        {index === 1 && (
+        {index === CheckoutStep.Contact && (
           <Box>
             <Heading mb={5}>Введите контактную информацию</Heading>
             <UserDataFrom
@@ -98,7 +109,7 @@ const StepsContent = ({
           </Box>
         )}
 
-        {index === 2 && (
+        {index === CheckoutStep.Summary && (
           <Box display="flex" alignItems="center" flexDirection="column">
             <OrderInformation
               basket={basket}
@@ -108,18 +119,24 @@ const StepsContent = ({
             <Button
               p={2}
               onClick={() => {
-                onCurrentStep(3);
+                onCurrentStep(CheckoutStep.Complete);
 
                 toaster.create({
                   title: "Заказ оформлен!",
                   type: "success",
                 });
-                useStore.setState({ basket: [] });
+                useStore.setState((prev) => ({
+                  ...prev,
+                  basket: [],
+                  isCartEmpty: true,
+                }));
+
+                localStorage.removeItem(STORAGE_KEY);
               }}
               mt={4}
-              bg="rgb(82, 167, 114)"
+              bg={colors.green[50]}
               transition="background-color 300ms"
-              _hover={{ bg: "rgba(82, 167, 115, 0.75)" }}
+              _hover={{ bg: colors.green[100] }}
             >
               Подтвердить заказ
             </Button>

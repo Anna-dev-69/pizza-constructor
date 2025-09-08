@@ -1,3 +1,4 @@
+import colors from "../shared/colors";
 import Header from "../components/header/Header";
 import BasketAdd from "../components/main/basket-add/BasketAdd";
 import { useStore } from "../store/store";
@@ -18,17 +19,17 @@ const Basket = () => {
           variant="solid"
           p={2}
           border="1px solid rgb(248, 150, 76)"
-          bg="rgb(255, 255, 255)"
-          color="rgb(248, 150, 76)"
-          _hover={{ bg: "rgba(245, 203, 169, 0.21)" }}
+          bg={colors.white[50]}
+          color={colors.orange[100]}
+          _hover={{ bg: colors.dark[100] }}
         >
           <Link to="/">Выбрать еще пиццу</Link>
         </Button>
         <Button
           variant="solid"
           p={2}
-          bg="rgb(248, 150, 76)"
-          _hover={{ bg: "rgb(230,130,50)" }}
+          bg={colors.orange[100]}
+          _hover={{ bg: colors.orange[200] }}
           disabled={basket.length === 0}
         >
           <Link to="/order">Оформить заказ</Link>

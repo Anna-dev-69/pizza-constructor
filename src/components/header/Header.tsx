@@ -1,3 +1,4 @@
+import colors from "../../shared/colors";
 import { Flex, Heading, HStack } from "@chakra-ui/react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -12,6 +13,7 @@ const links = [
 
 const Header = () => {
   const location = useLocation();
+
   return (
     <Flex
       as="header"
@@ -26,7 +28,7 @@ const Header = () => {
       zIndex={10}
       bg="rgb(255, 255, 255)"
     >
-      <Heading size={"xl"} color="#333">
+      <Heading size={"xl"} color={colors.dark[50]}>
         Конструктор пиццы
       </Heading>
 
@@ -39,15 +41,19 @@ const Header = () => {
               key={link.id}
               to={link.href}
               style={{
-                color: "#333",
+                color: isActive ? `${colors.orange[50]}` : `${colors.dark[50]}`,
                 fontWeight: 500,
                 textDecoration: isActive ? "underline" : "none",
                 textUnderlineOffset: "4px",
                 transition: "color 0.2s",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#f08a3c")}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.color = `${colors.orange[50]}`)
+              }
               onMouseLeave={(e) =>
-                (e.currentTarget.style.color = isActive ? "#f08a3c" : "#333")
+                (e.currentTarget.style.color = isActive
+                  ? `${colors.orange[50]}`
+                  : `${colors.dark[50]}`)
               }
             >
               {link.title}
